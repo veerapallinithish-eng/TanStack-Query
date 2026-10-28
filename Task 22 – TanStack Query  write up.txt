@@ -1,0 +1,66 @@
+ Task 22 – TanStack Query (React Query)
+
+ 1. What is the difference between server state and client state?
+
+**Server state** is data that comes from the backend. In my project, the task list and dashboard statistics are server state because they come from the Flask API.
+
+**Client state** is data managed in React. For example, the search input and selected status filter are client state.
+
+I used TanStack Query to fetch and manage server data.
+
+
+
+ 2. What is a query key? Why are these keys different?
+
+A query key identifies a query and its cached data.
+
+- `['tasks']` fetches all tasks.
+- `['tasks', { status: 'todo' }]` fetches only tasks with the `todo` status.
+
+TanStack Query stores these results separately because the query keys are different.
+
+
+
+ 3. What does `invalidateQueries` do?
+
+`invalidateQueries` marks cached data as outdated so TanStack Query can fetch updated data.
+
+In my project, I use it after adding, updating, or deleting a task.
+
+Example:
+```js
+queryClient.invalidateQueries({
+  queryKey: ['tasks']
+});
+```
+
+If I forget to use it, the task list may show old data. A new task might not appear, or a deleted task might still be visible.
+
+
+
+
+ 4. What is `staleTime`?
+
+`staleTime` decides how long data stays fresh in the cache.
+
+In my project, I set it to one minute.
+
+Example:
+```js
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60,
+      retry: 1
+    }
+  }
+});
+```
+
+This keeps data fresh for 60 seconds and helps reduce unnecessary API calls.
+
+For dashboard statistics, I use `refetchInterval: 10000` to fetch updated data every 10 seconds.
+
+### Conclusion
+
+I learned how to use TanStack Query to fetch data, add and delete tasks, update cached data, and refresh dashboard statistics automatically.
